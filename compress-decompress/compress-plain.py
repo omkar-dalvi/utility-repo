@@ -2,10 +2,24 @@
 import os
 
 EXCLUDED_EXTENSIONS = {
-    ".onxx", ".pkl", ".pptx", ".xlsx"
+    ".onnx",
+    ".pkl",
+    ".pptx",
+    ".xlsx",
+    ".exe",
+    ".pfx"
 }
 
-EXCLUDED_DIRECTORIES = {".git"}
+EXCLUDED_FILENAMES = {
+    ".gitignore",
+    ".terraform.lock.hcl"
+}
+
+EXCLUDED_DIRECTORIES = {
+    ".git",
+    ".terraform"
+}
+
 
 def folder_to_text(source_folder, output_file):
 
@@ -18,7 +32,7 @@ def folder_to_text(source_folder, output_file):
 
         for root, dirs, files in os.walk(source_folder):
 
-            # Exclude .git directories
+            # Exclude specified directories
             dirs[:] = sorted(
                 d for d in dirs
                 if d.lower() not in EXCLUDED_DIRECTORIES
@@ -26,11 +40,17 @@ def folder_to_text(source_folder, output_file):
 
             for filename in sorted(files):
 
+                # Check complete filename exclusions
+                if filename.lower() in EXCLUDED_FILENAMES:
+                    print(f"[SKIPPED - FILENAME] {filename}")
+                    total_skipped += 1
+                    continue
+
+                # Check file extension exclusions
                 extension = os.path.splitext(filename)[1].lower()
 
-                # Skip excluded file types
                 if extension in EXCLUDED_EXTENSIONS:
-                    print(f"[SKIPPED] {filename}")
+                    print(f"[SKIPPED - EXTENSION] {filename}")
                     total_skipped += 1
                     continue
 
@@ -43,14 +63,13 @@ def folder_to_text(source_folder, output_file):
                 print(f"[PROCESSING] {relative_path}")
 
                 try:
-                    # Read only text files
                     with open(full_path, "r", encoding="utf-8") as f:
                         content = f.read()
 
-                    # Add file boundaries
                     output.write(
                         f"\n===== FILE: {relative_path} =====\n\n"
                     )
+
                     output.write(content)
                     output.write("\n\n===== END FILE =====\n")
 
