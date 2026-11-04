@@ -108,4 +108,4 @@ if __name__ == "__main__":
     folder_to_bundle(args.source, args.output)
     
 # USAGE
-# python compress_to_json.py "<complete-path-to-folder>" "details.json"
+# python compress-encoded.py "<complete-path-to-folder>" "details.json"

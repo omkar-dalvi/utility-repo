@@ -110,4 +110,4 @@ if __name__ == "__main__":
     bundle_to_folder(args.bundle, args.output)
 
 # USAGE
-# python decompress_to_folder.py  "details.json" "foldername"
+# python decompress-encoded.py  "details.json" "foldername"
